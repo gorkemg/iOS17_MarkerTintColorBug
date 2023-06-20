@@ -1,6 +1,10 @@
 # iOS17_MarkerTintColorBug
 Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring markerTintColor = .clear, when it was set to a different color previously.
 
+![Screenshot of the app with a map, which has a single annotation with an image of a bus. The annotation marker isn't visible, since it is transparent](screenshots/1._Simulator_Screenshot_-_all_correct.png "Screenshot of the app with a map, which has a single annotation with an image of a bus. The annotation marker isn't visible, since it is transparent")
+![Screenshot of the app with a map, which has a single selected annotation with a blue big marker displaying the text BUS.](screenshots/2._Simulator_Screenshot_-_all_correct.png "Screenshot of the app with a map, which has a single selected annotation with a blue big marker displaying the text BUS.")
+![Screenshot of the app with a map, which has a single unselected annotation. A small blue empty marker is overlayed on top of the annotation image, basically hiding it. The marker should be transparent and invisible.](screenshots/3._Simulator_Screenshot_-_not_correct.png "Screenshot of the app with a map, which has a single unselected annotation. A small blue empty marker is overlayed on top of the annotation image, basically hiding it. The marker should be transparent and invisible.")
+
 ## Issue
 
 Up until iOS 16, it was possible to have an opaque MKMarkerAnnotationView with a markerTintColor set to a color, transition to a completely transparent marker with markerTintColor = .clear.
