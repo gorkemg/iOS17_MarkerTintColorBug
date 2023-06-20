@@ -1,10 +1,10 @@
 # iOS17_MarkerTintColorBug
 Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring markerTintColor = .clear, when it was set to a different color previously.
 
-<img src="screenshots/1._Simulator_Screenshot_-_all_correct.png" width="280" alt="Screenshot of the app with a map, which has a single annotation with an image of a bus. The annotation marker isn't visible, since it is transparent">
-<img src="screenshots/2._Simulator_Screenshot_-_all_correct.png" width="280" alt="Screenshot of the app with a map, which has a single selected annotation with a blue big marker displaying the text BUS.">
-<img src="screenshots/3._Simulator_Screenshot_-_not_correct.png" width="280" alt="Screenshot of the app with a map, which has a single unselected annotation. A small blue empty marker is overlayed on top of the annotation image, basically hiding it. The marker should be transparent and invisible.">
-
+| Correct :white_check_mark: | Correct :white_check_mark: | Incorrect :x:  |
+|:----------|:----------|:----------|
+| <img src="screenshots/1._Simulator_Screenshot_-_all_correct.png" alt="Screenshot of the app with a map, which has a single annotation with an image of a bus. The annotation marker isn't visible, since it is transparent">    | <img src="screenshots/2._Simulator_Screenshot_-_all_correct.png" alt="Screenshot of the app with a map, which has a single selected annotation with a blue big marker displaying the text BUS."> | <img src="screenshots/3._Simulator_Screenshot_-_not_correct.png" alt="Screenshot of the app with a map, which has a single unselected annotation. A small blue empty marker is overlayed on top of the annotation image, basically hiding it. The marker should be transparent and invisible."> |
+| The image of the annotation is visible. The marker is transparent, due to `.markerTintColor = .clear`. | The image of the annotation is removed and a big blue marker is visible, since it is selected. | The image of the annotation should be visible, but is hidden behind a small blue empty marker, which should be transparent with `.markerTintColor = .clear`, but isn't. |
 
 ## Issue
 
