@@ -1,8 +1,9 @@
 # iOS17_MarkerTintColorBug
-Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring markerTintColor = .clear, when it was set to a different color previously.
+Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring `markerTintColor = .clear`, when it was set to a different color previously. This issue happens on iOS 16 and iOS 17 Seed 1, so far.
 
 | Correct :white_check_mark: | Correct :white_check_mark: | Incorrect :x:  |
 |:----------|:----------|:----------|
+| Unselected state | Selected state | Unselected state again |
 | <img src="screenshots/1._Simulator_Screenshot_-_all_correct.png" alt="Screenshot of the app with a map, which has a single annotation with an image of a bus. The annotation marker isn't visible, since it is transparent">    | <img src="screenshots/2._Simulator_Screenshot_-_all_correct.png" alt="Screenshot of the app with a map, which has a single selected annotation with a blue big marker displaying the text BUS."> | <img src="screenshots/3._Simulator_Screenshot_-_not_correct.png" alt="Screenshot of the app with a map, which has a single unselected annotation. A small blue empty marker is overlayed on top of the annotation image, basically hiding it. The marker should be transparent and invisible."> |
 | The image of the annotation is visible. The marker is transparent, due to `.markerTintColor = .clear`. | The image of the annotation is removed and a big blue marker is visible, since it is selected. | The image of the annotation should be visible, but is hidden behind a small blue empty marker, which should be transparent with `.markerTintColor = .clear`, but isn't. |
 
@@ -10,23 +11,43 @@ Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring mark
 
 Up until iOS 16, it was possible to have an opaque MKMarkerAnnotationView with a markerTintColor set to a color, transition to a completely transparent marker with markerTintColor = .clear.
 
-This was necessary if you want to only show a `markerAnnotationView.image` on the map, but the marker bubble with a glyph when the annotation was selected and vice versa (hide the marker when unselected).
+This was necessary if you want to only show a `markerAnnotationView.image` on the map (no bubble) when unselected, but the marker bubble with a glyph when the annotation was selected.
 
 However, since iOS 16 and also in iOS 17 Seed 1, this is not possible anymore.
 
 The marker will not be transparent and overlay on top of the `markerAnnotationView.image`.
 
 ## Example
-Example code inside MKMarkerAnnotationView subclass:
+Example code of MKMarkerAnnotationView subclass:
 ``` Swift
-if isSelected {
-    self.image = nil
-    self.glyphText = "BUS"
-    self.markerTintColor = .blue
-}else{
-    self.image = UIImage(systemName: "bus")
-    self.glyphText = ""
-    self.markerTintColor = .clear	// <- Issue
+class MarkerView: MKMarkerAnnotationView {
+
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        update()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        update()
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        update()
+    }
+    
+    func update() {
+        if isSelected {
+            self.image = nil
+            self.glyphText = "BUS"
+            self.markerTintColor = .blue
+        }else{
+            self.image = UIImage(systemName: "bus")
+            self.glyphText = ""
+            self.markerTintColor = .clear	// <- Issue here, when not .clear before
+        }
+    }
 }
 ```
 `self.markerTintColor = .clear` works the first time, but not a second time, leaving an empty marker on the map, hiding the `.image` below it.
