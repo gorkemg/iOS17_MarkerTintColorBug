@@ -1,5 +1,13 @@
+
 # iOS17_MarkerTintColorBug
 Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring `markerTintColor = .clear`, when it was set to a different color previously. This issue happens on iOS 16 and iOS 17 Seed 1, so far.
+
+# FIXED!! :partying_face: 
+
+Since iOS17 Beta 4 (Xcode 15.0.0 Beta 5) it seems to be fixed! Filing a feedback worked, apparently.
+I hope it stays fixed, so only iOS 16 needs a workaround.
+
+## Issue
 
 | Correct :white_check_mark: | Correct :white_check_mark: | Incorrect :x:  |
 |:----------|:----------|:----------|
@@ -7,7 +15,6 @@ Sample project demonstrating the issue of a MKMarkerAnnotationView ignoring `mar
 | <img src="screenshots/1._Simulator_Screenshot_-_all_correct.png" alt="Screenshot of the app with a map, which has a single annotation with an image of a bus. The annotation marker isn't visible, since it is transparent">    | <img src="screenshots/2._Simulator_Screenshot_-_all_correct.png" alt="Screenshot of the app with a map, which has a single selected annotation with a blue big marker displaying the text BUS."> | <img src="screenshots/3._Simulator_Screenshot_-_not_correct.png" alt="Screenshot of the app with a map, which has a single unselected annotation. A small blue empty marker is overlayed on top of the annotation image, basically hiding it. The marker should be transparent and invisible."> |
 | The image of the annotation is visible. The marker is transparent, due to `.markerTintColor = .clear`. | The image of the annotation is removed and a big blue marker is visible, since it is selected. | The image of the annotation should be visible, but is hidden behind a small blue empty marker, which should be transparent with `.markerTintColor = .clear`, but isn't. |
 
-## Issue
 
 Up until iOS 16, it was possible to have an opaque MKMarkerAnnotationView with a markerTintColor set to a color, transition to a completely transparent marker with markerTintColor = .clear.
 
@@ -60,6 +67,10 @@ class MarkerView: MKMarkerAnnotationView {
 - Tap somewhere on the map to deselect the annotation, 
 	- the Marker will shrink, but not disappear, leaving an empty small marker on the map, overlayed on top of the bus image, basically hiding it
 
-## Fix
+## Fix / Workaround
 
 As far as I know, there is no fix, if you want to switch between opaque and transparent markers back and forth.
+A workaround would be to not dequeue annotations and always init a new one, which is likely very terrible for memory usage.
+
+### Update
+This issue has been fixed since iOS 17 Beta 4 (Xcode 15.0.0 Beta 5)!
